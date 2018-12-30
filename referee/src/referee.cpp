@@ -2,8 +2,13 @@
 #include <iostream>
 #include "geometry_msgs/Twist.h"
 #include "std_msgs/String.h"
-#include <math.h>
-#include <experimental/random>
+//#include <experimental/random>
+//#include <math.h>
+#include <image_transport/image_transport.h>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
+#include <cv_bridge/cv_bridge.h>
 
 std::string players[] = {"", "", "", ""};
 int points[] = {0, 0, 0, 0};
@@ -25,12 +30,44 @@ void p4(const std_msgs::String::ConstPtr& val){
     players[3] = val->data;
 }
 
-/*void quit(ros::NodeHandle n){
-ros::Publisher quit = n.advertise<std_msgs::String>("quit_topic", 1);
-std_msgs::String _quit_;
-_quit_.data = "this is the end";
-quit.publish(_quit_);
-}*/
+/*
+bool winner = false;
+
+class ImageSaver{
+    ros::NodeHandle nh_;
+    image_transport::ImageTransport it_;
+    image_transport::Subscriber image_sub_;
+
+    int i = 0;
+    char filename[80];
+
+public:
+    ImageSaver()
+            : it_(nh_)
+    {
+        image_sub_ = it_.subscribe("/camera/rgb/image_raw", 1, &ImageSaver::imageCb, this);
+    }
+
+
+    void imageCb(const sensor_msgs::ImageConstPtr& msg)
+    {
+        cv_bridge::CvImagePtr cv_ptr;
+        try
+        {
+            cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+        }
+        catch (cv_bridge::Exception& e)
+        {
+            ROS_ERROR("cv_bridge exception: %s", e.what());
+            return;
+        }
+        if(winner){
+            sprintf(filename,"Winner_Round:%d.png", i++);
+            cv::imwrite(filename,cv_ptr->image);
+            winner = false;
+        }
+    }
+};*/
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "referee");
@@ -50,7 +87,6 @@ int main(int argc, char *argv[]) {
     int untie = 0;
     ROS_INFO("\tLet's play a game...");
     while (ros::ok && round + untie <= 4){
-        //quit(nh);
         ros::spinOnce();
         ros::Duration(0.5).sleep();
         if (players[0] != "" && players[1] != "" && players[2] != "" && players[3] != "") {
@@ -87,6 +123,9 @@ int main(int argc, char *argv[]) {
             feedback.publish(strea_message);
             msg.angular.z = player * M_PI / 2;
             velocity.publish(msg);
+            ros::Duration(1.0).sleep();
+            /*winner = true;
+            ImageSaver is;*/
             ros::Duration(1.0).sleep();
             ros::spinOnce();
         };
