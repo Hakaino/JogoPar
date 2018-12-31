@@ -10,12 +10,14 @@ their card by sending the name of it to the “referee”.  The referee then “
 all the cards and computes the scoreboard with current points for the given
 round.
 
+
+				I hope that you enjoy it :D
+
+
 (The image taking is commented out, and the velocity topic was replaced by its representative on turtlesim,
 because the game can be player with the turtlesim)
 
-
-
-Setup
+# Setup
 - The players must be sited in the corners of a 3m square, while the robot stands in the center 
 - Every player sits around in order from player 1 to 4 anticlockwise. 
 - The robot starts facing player 1
