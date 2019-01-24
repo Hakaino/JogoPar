@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     ROS_INFO("[PLAYER 2]");
     ROS_INFO("chose one >>\ttic\tpuk\tbla\tzuw\tret\ttype 'quit' to quit");
     input_card();
-    while (ros::ok && choice.data != "quit") {
+    while (ros::ok() && choice.data != "quit") {
       if (choice.data == a || choice.data == b || choice.data == c ||
          choice.data == d || choice.data == e || choice.data == "quit"){
            publisher.publish(choice);
